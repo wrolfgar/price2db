@@ -39,6 +39,36 @@ def sweetwater(session):
     return data
 
 
+def amazon(session):
+    url = "https://www.amazon.com/Shure-SM7B-Cardioid-Dynamic-Microphone/dp/B0002E4Z8M?th=1"
+    resp = session.get(url)
+    soup = BeautifulSoup(resp.text, "html.parser")
+    data = (
+        "amazon",
+        # float(
+        # soup.select("span.a-price-whole")  # .text.replace(
+        # soup.select("div.corePrice_feature_div span.a-offscreen")
+        # <span class="a-offscreen">$399.00</span>
+        soup.find('span', class_='a-offscreen')
+        # "$", ""
+        # )
+        # .strip("$")
+        # ),
+    )
+    return data
+
+
+def thomann(session):
+    url = "https://www.thomannmusic.com/shure_sm_7b_studiomikro.htm"
+    resp = session.get(url)
+    soup = BeautifulSoup(resp.text, "html.parser")
+    data = (
+        "thomann",
+        float(soup.select_one("div.price-wrapper div.price").text.replace("$", "")),
+    )
+    return data
+
+
 def main():
     session = requests.Session()
     session.headers.update(
@@ -48,6 +78,8 @@ def main():
     )
 
     print(sweetwater(session))
+    print(amazon(session))
+    print(thomann(session))
 
 
 if __name__ == "__main__":
